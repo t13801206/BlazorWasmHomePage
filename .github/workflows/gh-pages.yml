@@ -1,0 +1,28 @@
+# t13801206/BlazorWasmHomePage/.github/workflows/gh-pages.yml
+
+name: github pages
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Publish
+        run: dotnet publish BlazorWasmHomePage/BlazorWasmHomePage.csproj -p:GHPages=true -c:Release -o:publish
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: publish/wwwroot
+          force_orphan: true
